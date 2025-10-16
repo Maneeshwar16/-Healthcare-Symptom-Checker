@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title> Healthcare Symptom Checker
+    </title>
+    <style>
+      :root { color-scheme: light dark; }
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; min-height: 100vh; background: linear-gradient(180deg, #eef2ff 0%, #f8fafc 40%, #ffffff 100%); display: flex; align-items: center; justify-content: center; padding: 24px; transition: background 220ms ease, color 220ms ease; color: #0f172a; }
+      body.dark { background: linear-gradient(180deg, #0b1220 0%, #0f172a 30%, #0b1220 100%); color: #e5e7eb; }
+      .container { width: 100%; max-width: 880px; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border: 1px solid #e5e7eb; border-radius: 16px; box-shadow: 0 10px 30px rgba(2,6,23,0.06); padding: 28px; transition: background 220ms ease, border-color 220ms ease, box-shadow 220ms ease; }
+      body.dark .container { background: rgba(15,23,42,0.7); border-color: #1f2937; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+      textarea { width: 100%; min-height: 140px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px 14px; outline: none; box-shadow: inset 0 1px 0 rgba(0,0,0,0.02); background: #fff; color: #0f172a; }
+      textarea:focus { border-color: #93c5fd; box-shadow: 0 0 0 4px rgba(147,197,253,0.35); }
+      body.dark textarea { background: #0b1220; color: #e5e7eb; border-color: #334155; }
+      label { font-weight: 600; }
+      .row { margin: 0.75rem 0; }
+      .result { margin-top: 1rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 12px; background: #f9fafb; box-shadow: 0 8px 20px rgba(2,6,23,0.06); }
+      body.dark .result { background: #0b1220; border-color: #1f2937; }
+      .muted { color: #666; font-size: 0.9rem; }
+      body.dark .muted { color: #9ca3af; }
+      h1, h2, h3, label { color: inherit; }
+      body:not(.dark) h1, body:not(.dark) h2, body:not(.dark) h3 { color: #0b132a; }
+      body.dark h1, body.dark h2, body.dark h3 { color: #e5e7eb; }
+      h1 { font-weight: 800; }
+      .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #eef; margin-right: 6px; font-size: 0.8rem; text-transform: capitalize; color: #0f172a; }
+      body.dark .pill { background: rgba(148,163,184,0.18); color: #e5e7eb; border: 1px solid rgba(148,163,184,0.35); }
+      button { padding: 0.7rem 1.1rem; border: none; border-radius: 10px; background: #2563eb; color: #fff; cursor: pointer; box-shadow: 0 8px 18px rgba(37,99,235,0.25); transition: transform 140ms ease, box-shadow 140ms ease; }
+      button:hover { transform: translateY(-1px); box-shadow: 0 12px 22px rgba(37,99,235,0.32); }
+      button:disabled { opacity: 0.7; cursor: not-allowed; }
+      h1 { margin-bottom: 0.25rem; letter-spacing: -0.02em; }
+      h2, h3 { margin: 0.75rem 0 0.5rem; }
+      .hero { margin-bottom: 1rem; display: flex; align-items: center; gap: 12px; }
+      .logo { width: 40px; height: 40px; display: grid; place-items: center; background: #dbeafe; color: #1d4ed8; border-radius: 10px; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 6px 12px rgba(29,78,216,0.15); }
+      body.dark .logo { background: #1f2937; color: #60a5fa; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 6px 12px rgba(0,0,0,0.35); }
+      .next-step { padding: 8px 10px; background: #ecfdf5; border: 1px solid #bbf7d0; border-radius: 10px; color: #065f46; }
+      body.dark .next-step { background: #064e3b; border-color: rgba(16,185,129,0.35); color: #d1fae5; }
+      body.dark .next-step strong { color: #a7f3d0; }
+      .error { padding: 8px 10px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; color: #7f1d1d; }
+      body.dark .error { background: #3f1d1d; border-color: rgba(254,202,202,0.4); color: #fecaca; }
+      .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+      input[type="number"], select { width: 100%; border: 1px solid #e5e7eb; border-radius: 12px; padding: 10px 12px; outline: none; background: #fff; color: #0f172a; }
+      input[type="number"]:focus, select:focus { border-color: #93c5fd; box-shadow: 0 0 0 4px rgba(147,197,253,0.35); }
+      body.dark input[type="number"], body.dark select { background: #0b1220; color: #e5e7eb; border-color: #334155; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="hero">
+        <div class="logo">❤</div>
+        <div>
+          <h1> Healthcare Symptom Checker
+          </h1>
+          <p class="muted">For learning only — not a diagnosis. If you feel unsafe or very unwell, call your local emergency number now.</p>
+        </div>
+      </div>
+
+    <div class="row">
+      <label for="symptoms">Describe your symptoms</label>
+      <textarea id="symptoms" placeholder="e.g., 2 days of fever, dry cough, sore throat. No shortness of breath."></textarea>
+    </div>
+      <div class="row grid">
+      <div>
+        <label for="age">Age (optional)</label>
+        <input id="age" type="number" min="0" max="120" style="width:100%" />
+      </div>
+      <div>
+          <label for="gender">Gender (optional)</label>
+          <select id="gender" style="width:100%">
+            <option value="">—</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+      </div>
+    </div>
+      <div class="row">
+        <button id="submit">Get Suggestions</button>
+      </div>
+
+      <div id="out" class="result" hidden></div>
+    </div>
+    <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+    <script>
+      const el = (id) => document.getElementById(id);
+      const out = el('out');
+      // Theme init
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') document.body.classList.add('dark');
+      // Add theme toggle button
+      const themeBtn = document.createElement('button');
+      themeBtn.id = 'themeToggle';
+      themeBtn.style.marginLeft = 'auto';
+      themeBtn.style.padding = '6px 10px';
+      themeBtn.style.borderRadius = '999px';
+      themeBtn.style.border = '1px solid rgba(0,0,0,0.08)';
+      themeBtn.style.fontWeight = '600';
+      themeBtn.style.display = 'inline-flex';
+      themeBtn.style.alignItems = 'center';
+      themeBtn.style.gap = '6px';
+      themeBtn.style.cursor = 'pointer';
+      themeBtn.style.boxShadow = '0 4px 10px rgba(0,0,0,0.08)';
+      function applyThemeBtnStyles() {
+        const dark = document.body.classList.contains('dark');
+        themeBtn.textContent = dark ? 'Light' : 'Dark';
+        themeBtn.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+        themeBtn.style.background = dark ? '#e5e7eb' : '#0f172a';
+        themeBtn.style.color = dark ? '#0f172a' : '#ffffff';
+        themeBtn.style.borderColor = dark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)';
+        themeBtn.innerHTML = `${dark ? '☀️' : '🌙'} <span>${themeBtn.textContent} mode</span>`;
+      }
+      applyThemeBtnStyles();
+      document.querySelector('.hero').appendChild(themeBtn);
+      themeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        const dark = document.body.classList.contains('dark');
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+        applyThemeBtnStyles();
+      });
+      if (window.gsap) {
+        gsap.from('.container', { duration: 0.5, y: 10, opacity: 0, ease: 'power2.out' });
+        gsap.from('.hero', { duration: 0.6, delay: 0.05, y: 10, opacity: 0, ease: 'power2.out' });
+        gsap.from('textarea', { duration: 0.6, delay: 0.1, y: 10, opacity: 0, ease: 'power2.out' });
+      }
+      el('submit').addEventListener('click', async () => {
+        out.hidden = true; out.innerHTML = '';
+        const symptoms = el('symptoms').value.trim();
+        const ageVal = el('age').value;
+        const gender = el('gender').value;
+        const age = ageVal ? Number(ageVal) : undefined;
+        if (!symptoms || symptoms.length < 5) {
+          out.hidden = false; out.innerHTML = '<div class="error">Please share a bit more detail about how you feel.</div>'; return;
+        }
+        el('submit').disabled = true; el('submit').textContent = 'Thinking...';
+        try {
+          const res = await fetch('/api/check', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ symptoms, age, gender: gender || undefined })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Request failed');
+          out.hidden = false;
+          out.innerHTML = renderResult(data);
+          if (window.gsap) {
+            gsap.from('#out .card', { duration: 0.5, y: 12, opacity: 0, stagger: 0.08, ease: 'power2.out' });
+          }
+        } catch (e) {
+          out.hidden = false; out.innerHTML = '<div class="error">Something went wrong. Please try again later.</div>';
+        } finally {
+          el('submit').disabled = false; el('submit').textContent = 'Get Suggestions';
+        }
+      });
+
+      function renderResult(data) {
+        const conds = (data.conditions || []).map(c => `
+          <div class="card">
+            <span class="pill">${friendlyChance(c.likelihood)}</span>
+            <strong>${escapeHtml(c.name)}</strong>
+            <div class="muted">${escapeHtml(c.rationale || '')}</div>
+          </div>
+        `).join('');
+        const recs = (data.recommendations || []).map(r => `<li class="card">${escapeHtml(r)}</li>`).join('');
+        const disclaimer = `<div class="muted">${escapeHtml(data.disclaimer || '')}</div>`;
+        const next = data.triage ? `<div class="next-step card"><strong>What to do next:</strong> ${escapeHtml(friendlyNextStep(data.triage))}</div>` : '';
+        return `${next}<h3>What it might be</h3>${conds || '<div class="muted">No suggestions yet.</div>'}<h3>What you can do</h3><ul>${recs}</ul>${disclaimer}`;
+      }
+      function friendlyChance(l) {
+        if (String(l).toLowerCase() === 'high') return 'more likely';
+        if (String(l).toLowerCase() === 'medium') return 'possible';
+        return 'less likely';
+      }
+      function friendlyNextStep(t) {
+        const k = String(t || '').toLowerCase();
+        if (k === 'self-care') return 'You can likely care for yourself at home right now.';
+        if (k === 'see pcp') return 'Book a routine doctor visit within the next few days.';
+        if (k === 'urgent care') return 'Visit a walk‑in clinic today if you can.';
+        if (k === 'emergency now') return 'Get emergency help now: call your local emergency number.';
+        return 'Consider speaking with a healthcare professional.';
+      }
+      function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
+    </script>
+  </body>
+  </html>
+
+
