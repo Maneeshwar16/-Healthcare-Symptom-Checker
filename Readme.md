@@ -211,5 +211,3 @@ Contributions are welcome! Please follow these steps:
 - Clear browser cache
 - Check console for errors
 - Verify server is running
-
-## Roa
